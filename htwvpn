@@ -1,0 +1,67 @@
+#!/bin/sh
+## needs: linux, sh, sudo, vpnc, config file and htw unix-account
+## tested gainst: debian wheezy
+
+## for debugging
+#set -x
+
+## startig point was
+##   http://www.htw-dresden.de/rz/zentrale-dienste-und-server/virtual-private-networks-vpn.html 
+## resulted in
+##   http://wiki.stura.htw-dresden.de/index.php/Vpn#Einrichtung_Debian
+
+## the config file /etc/htw/HTW_Internet_3.conf
+## is result of conversion from https://www.rz.htw-dresden.de/vpn/vpnsoft/profile/HTW_Internet_3.pcf
+
+#check if file exists and is readable
+if [ ! -r /etc/htw/HTW_Internet_3.conf ]; then
+  echo "vpn config not found" >2
+  exit 1
+fi
+
+## vpnc needs sudo if not root
+command="vpnc /etc/htw/HTW_Internet_3.conf"
+#if [[ $EUID -ne 0 ]]; then
+#  echo "command '${command}' needs sudo" >2
+  command="sudo ${command}"
+#fi
+$command
+
+#check for error
+if [ $? -gt 0 ]; then exit 1; fi
+
+exit 0
+
+#####
+## to be used later for subroutines 
+#####
+
+#test htwvpn
+## needs: ip
+
+## tun0 is not a good indicator but works for now
+## have to check credentials from config file instead
+
+ip link show tun0 >/dev/null
+e=$?
+if [ $e -gt 0 ]; then
+  exit 1
+else
+  exit 0
+fi
+
+## how to disconnect
+sudo vpnc-disconnect
+if [ $e -gt 0 ]; then
+  exit 1
+else
+  exit 0
+fi
+
+## how to convert example
+sudo pcf2vpnc ~/HTW_Internet_2.pcf ~/HTW_Internet_2.conf
+if [ $e -gt 0 ]; then
+  exit 1
+else
+  exit 0
+fi
