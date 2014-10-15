@@ -19,17 +19,47 @@ if [ ! -r /etc/htw/HTW_Internet_3.conf ]; then
   exit 1
 fi
 
+## check if process vpnc already is running
+p=$(ps ax|grep -v grep|grep -i 'vpnc /etc/htw/'|head -1|sed -E 's/[[:space:]]+/,/g'|sed -E 's/^,//'|cut -d, -f1)
+if [ ! "$p"x = ""x ]; then
+  ## abschalten oder abbrechen
+  if [ "$1"x = "-k"x ]; then
+    sudo vpnc-disconnect #> /dev/null
+    e=$?
+    if [ $e -eq 0 ]; then
+      echo "VPNC beendet \t[ OK ]"
+    fi
+    exit 0
+  else
+    echo "vpnc already running as process: $p" >2
+    ping -c1 -w5 rob.rz.htw-dresden.de
+    e=$?
+    if [ $e -eq 0 ]; then
+      echo "rob.rz is reachable!" >2
+      exit 2
+    else
+      echo "rob.rz not reachable, ending vpnc!" >2
+      $0 -k
+      exit 0
+    fi
+  fi
+fi
+
 ## vpnc needs sudo if not root
 command="vpnc /etc/htw/HTW_Internet_3.conf"
 #if [[ $EUID -ne 0 ]]; then
 #  echo "command '${command}' needs sudo" >2
   command="sudo ${command}"
 #fi
-$command
+$command > /dev/null
+e=$?
 
 #check for error
-if [ $? -gt 0 ]; then exit 1; fi
-
+if [ $? -gt 0 ]; then
+  echo "VPNC starten \t[ KO ]"
+  exit 1;
+fi
+echo "VPNC starten \t[ OK ]"
 exit 0
 
 #####
