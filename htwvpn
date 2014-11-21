@@ -95,3 +95,8 @@ if [ $e -gt 0 ]; then
 else
   exit 0
 fi
+
+########
+# htw network is 141.56.0.0/16
+# one could recognize a route to that net over another
+# and then e.g. disable vpn instead of activate for ease of use
