@@ -68,10 +68,10 @@ exit 0
 
 #test htwvpn
 ## needs: ip
+# make use of https://github.com/plitc/get_ipv4_address/ !
 
 ## tun0 is not a good indicator but works for now
-## have to check credentials from config file instead
-
+#should be exchanged for checking routes
 ip link show tun0 >/dev/null
 e=$?
 if [ $e -gt 0 ]; then
@@ -103,3 +103,9 @@ fi
 # echo htw_snum=72785 >> ~/.profile 
 # echo htw_acc=s\${htw_snum} >> ~/.profile 
 gw=$(ip r|grep default|cut -d" " -f3)
+#wget --user="" --password="" $file
+#https://www.rz.htw-dresden.de/vpn/vpnsoft/profile/HTW_Internet_2.pcf
+#https://www.rz.htw-dresden.de/vpn/vpnsoft/profile/HTW_Internet_3.pcf
+#https://www.rz.htw-dresden.de/vpn/vpnsoft/profile/HTW_Hoersaalnetz.pcf
+#pds: https://www.rz.htw-dresden.de/vpn/vpnsoft/GPW
+#info: http://www.htw-dresden.de/en/rz/zentrale-dienste-und-server/virtual-private-networks-vpn.html
