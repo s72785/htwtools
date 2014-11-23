@@ -100,3 +100,6 @@ fi
 # htw network is 141.56.0.0/16
 # one could recognize a route to that net over another
 # and then e.g. disable vpn instead of activate for ease of use
+# echo htw_snum=72785 >> ~/.profile 
+# echo htw_acc=s\${htw_snum} >> ~/.profile 
+gw=$(ip r|grep default|cut -d" " -f3)
