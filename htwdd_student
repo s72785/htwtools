@@ -1,0 +1,13 @@
+#!/bin/sh
+# verbinden auf den share für Studenten und Ablage von Studienarbeiten
+#geht auch für andere server des rz, mehr unter: 
+host="141.56.2.8"
+#hostname=$( nslookup 141.56.2.8|grep -o "name = .*"|cut -d" " -f3|cut -d. -f1-2 )
+domain="htwdd"
+t=$USER
+echo user: ${USER}
+read USER
+if [ "$USER"x = ""x ]; then
+	USER=$t
+fi
+sudo mount //${host}/student/ /mnt/ -o user=${USER},domain=${domain}
